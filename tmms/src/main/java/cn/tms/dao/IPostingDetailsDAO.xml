@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.tms.dao.IPostingDetailsDAO">
+
+    <select id="getCountByCondition" resultType="int">
+        SELECT COUNT(1) FROM PostingDetails
+        <if test="columncode!=null">
+            WHERE columnid=#{columncode}
+        </if>
+    </select>
+
+
+
+    <select id="getDetailsListById" resultType="PostingDetails">
+        SELECT * FROM PostingDetails
+        <if test="columncode!=null">
+            WHERE columnid=#{columncode}
+        </if>
+        LIMIT  #{page},#{rows}
+    </select>
+</mapper>

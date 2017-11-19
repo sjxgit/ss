@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.tms.dao.INewsDAO">
+
+    <resultMap id="newsMapper" type="News">
+        <id column="information_code" property="information_code"></id>
+        <result column="title" property="title"></result>
+        <result column="update_date" property="update_date"></result>
+        <association property="column" javaType="Column">
+            <id column="syscode" property="syscode"></id>
+            <result column="columnname" property="columnname"></result>
+        </association>
+        <association property="user" javaType="UserInfo">
+            <id column="userid" property="userid"></id>
+            <result column="username" property="username"></result>
+        </association>
+    </resultMap>
+
+    <!--1.根据栏目编号查询所有新闻-->
+    <select id="findNewsByColumn" resultMap="newsMapper">
+        select * from news_information,tms_user,cm_column
+        WHERE  news_information.create_by=tms_user.userid
+        and news_information.columntype=cm_column.syscode and columntype=#{columntype}
+    </select>
+
+    <!--2.添加新闻-->
+    <insert id="addNews">
+        insert into news_information(information_code,columntype,title,titlecolor,image_url,primaryword,content,publish_time,create_by,create_date)
+         values(UUID(),#{columntype},#{title},#{titlecolor},#{image_url},#{primaryword},#{content},SYSDATE(),1,SYSDATE())
+    </insert>
+    <!--3.根据新闻编号查询新闻对象-->
+    <select id="findNewsById" resultMap="newsMapper">
+        select * from news_information,tms_user,cm_column
+        WHERE  news_information.create_by=tms_user.userid
+        and news_information.columntype=cm_column.syscode and information_code=#{information_code}
+    </select>
+
+
+
+
+    <select id="selectSyscodeByColumn" resultType="String">
+        SELECT syscode FROM cm_column WHERE columnname=#{columnname}
+    </select>
+
+</mapper>
